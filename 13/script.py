@@ -2,14 +2,7 @@
 import json
 from functools import cmp_to_key
 
-
 file = './sample.txt' if 0 else './input.txt'
-
-
-class State:
-    TRUE = 1
-    FALSE = -1
-    UNKNOWN = 0
 
 
 def compare(left: list, right: list) -> int:
@@ -18,28 +11,22 @@ def compare(left: list, right: list) -> int:
         t_r = type(r)
         if t_l is int and t_r is int:
             if l < r:
-                return State.TRUE
+                return 1
             if l > r:
-                return State.FALSE
-            continue
-        if t_l is list and t_r is list:
-            res = compare(l, r)
-            if res != State.UNKNOWN:
-                return res
+                return -1
             continue
         if t_l is int:
             l = [l]
-        else:
+        if t_r is int:
             r = [r]
-        res = compare(l, r)
-        if res != State.UNKNOWN:
+        if res := compare(l, r):
             return res
 
     if len(left) < len(right):
-        return State.TRUE
+        return 1
     if len(left) > len(right):
-        return State.FALSE
-    return State.UNKNOWN
+        return -1
+    return 0
 
 
 def part1():
@@ -50,8 +37,7 @@ def part1():
         left, right = pairs.splitlines()
         left = json.loads(left)
         right = json.loads(right)
-
-        if compare(left, right) == State.TRUE:
+        if compare(left, right) == 1:
             ans += i
 
     print(f'part 1: {ans}')
